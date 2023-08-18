@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:adm="http://github.com/adminfaces"
+				xmlns:c="http://java.sun.com/jsp/jstl/core"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+				template="/WEB-INF/template/template.xhtml">
+
+	<ui:define name="title">Controle de entrada e saída</ui:define>
+	<ui:define name="description">Controle de entrada e saída de equipamentos</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Saída" />
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{finalizados.grantAccess}" />
+		</f:metadata>
+		<h:form rendered="#{sessao.usuario.hasPerfil('SCV SCM SCA')}">
+			<p:dataTable var="controle" value="#{finalizados.fechadas}" emptyMessage="Nenhum controle cadastrado." paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="Filtrados: {totalRecords} | Página {currentPage} de {totalPages}" rowsPerPageTemplate="10,50" resizableColumns="true">
+				<p:column headerText="DINF" width="6%" sortBy="#{controle.dinf}" filterBy="#{controle.dinf}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.dinf}" />
+				</p:column>
+				<p:column headerText="SAU" width="6%" sortBy="#{controle.sau}" filterBy="#{controle.sau}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.sau}" />
+				</p:column>
+				<p:column headerText="Usuário entrada" width="15%" sortBy="#{controle.usuarioEntrada}" filterBy="#{controle.usuarioEntrada}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.usuarioEntrada}" />
+				</p:column>
+				<p:column headerText="Administrador entrada" width="15%" sortBy="#{controle.administradorEntrada}" filterBy="#{controle.administradorEntrada}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.administradorEntrada}" />
+				</p:column>
+				<p:column headerText="Data entrada" width="10%" sortBy="#{controle.dataEntrada}">
+					<h:outputText value="#{controle.dataEntrada}"><f:convertDateTime pattern="dd/MM/yyyy 'às' HH:mm" /></h:outputText>
+				</p:column>
+				<p:column headerText="Usuário saída" width="15%" sortBy="#{controle.usuarioSaida}" filterBy="#{controle.usuarioEntrada}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.usuarioSaida}" />
+				</p:column>
+				<p:column headerText="Administrador saída" width="15%" sortBy="#{controle.administradorSaida}" filterBy="#{controle.administradorSaida}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.administradorSaida}" />
+				</p:column>
+				<p:column headerText="Data saída" width="10%" sortBy="#{controle.dataSaida}">
+					<h:outputText value="#{controle.dataSaida}"><f:convertDateTime pattern="dd/MM/yyyy 'às' HH:mm" /></h:outputText>
+				</p:column>
+				<p:column style="width: 34px; text-align: right;" toggleable="false">
+					<p:tooltip position="left" showEffect="fade" hideEffect="fade" />
+					<p:commandButton update="descricaoControle" icon="fa fa-info" title="Ver descrição" styleClass="btn-info" onsuccess="PF('descricaoDialog').show();" onerror="alert('Algo ocorreu, tente novamente.');">
+						<f:setPropertyActionListener value="#{controle}" target="#{finalizados.controle}" />
+					</p:commandButton>
+				</p:column>
+				<f:facet name="footer">Total: #{fn:length(finalizadas.fechadas)}</f:facet>
+			</p:dataTable>
+		</h:form>
+		<p:dialog modal="true" widgetVar="descricaoDialog" showEffect="fade" hideEffect="fade" closeOnEscape="true" width="70%">
+			<f:facet name="header"><h:outputText value="Informações" /></f:facet>
+			<div class="ui-g">
+				<h:outputText id="descricaoControle" value="#{finalizados.controle.descricao}" />
+			</div>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

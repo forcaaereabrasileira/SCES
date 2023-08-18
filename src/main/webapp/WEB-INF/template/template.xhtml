@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:adm="http://github.com/adminfaces"
+				xmlns:jsf="http://xmlns.jcp.org/jsf"
+				template="/admin.xhtml">
+				
+	<ui:define name="head">
+		<ui:include src="/WEB-INF/template/head.xhtml" />
+	</ui:define>
+
+	<ui:define name="logo-lg">
+		<i class="fa fa-ticket" />
+		<span>#{app.name}</span>
+	</ui:define>
+
+	<ui:define name="logo-mini">
+		<i class="fa fa-ticket" />
+	</ui:define>
+	
+	<ui:define name="menu">
+		<ui:include src="/WEB-INF/template/sidebar.xhtml" />
+	</ui:define>
+	
+	<ui:define name="top-menu">
+		<ui:include src="/WEB-INF/template/toolbar.xhtml" />
+	</ui:define>
+
+	<ui:define name="footer">
+		<adm:sidebar collapsed="true"/>
+		<a><h:outputText value="&amp;copy;" escape="false" /> 2020 - #{app.title} - Desenvolvido por 2S Suchorski [GAP-LS]</a>
+		<div class="pull-right hidden-xs" style="color: gray">
+			<i>#{app.name} - #{app.version}</i>
+		</div>
+	</ui:define>
+
+</ui:composition>

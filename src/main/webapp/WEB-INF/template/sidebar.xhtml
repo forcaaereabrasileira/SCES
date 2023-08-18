@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+<h:body>
+	<ui:composition>
+		<ul class="sidebar-menu tree">
+			<li jsf:rendered="#{sessao.usuario.hasPerfil('SCM SCA')}">
+				<p:link outcome="saida">
+					<i class="fa fa-arrow-right"></i>
+					<span>Saída</span>
+				</p:link>
+			</li>
+			<li jsf:rendered="#{sessao.usuario.hasPerfil('SCM SCA')}">
+				<p:link outcome="entrada">
+					<i class="fa fa-arrow-left"></i>
+					<span>Entrada</span>
+				</p:link>
+			</li>
+			<li jsf:rendered="#{sessao.usuario.hasPerfil('SCV SCM SCA')}">
+				<p:link outcome="finalizados">
+					<i class="fa fa-check"></i>
+					<span>Finalizados</span>
+				</p:link>
+			</li>
+		</ul>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:adm="http://github.com/adminfaces"
+				xmlns:c="http://java.sun.com/jsp/jstl/core"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+				template="/WEB-INF/template/template.xhtml">
+
+	<ui:define name="title">Controle de entrada</ui:define>
+	<ui:define name="description">Controle de entrada de equipamentos</ui:define>
+
+	<ui:define name="body">
+		<ui:param name="renderMessages" value="false"/>
+		<adm:breadcrumb title="Entrada" />
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{entrada.grantAccess}" />
+		</f:metadata>
+		<h:form id="controle" rendered="#{sessao.usuario.hasPerfil('SCV SCM SCA')}">
+			<div class="ui-fluid">
+				<p:panel header="Entrada de equipamento">
+					<p:panelGrid columns="2" columnClasses="ui-g-2,ui-g-10" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="sau" value="SAU:" />
+						<p:inputText id="sau" value="#{entrada.sau}" required="true" requiredMessage="O campo precisa ser preenchido" maxlength="16" />
+						<p:outputLabel for="dinf" value="DINF:" />
+						<p:inputText id="dinf" value="#{entrada.dinf}" required="true" requiredMessage="O campo precisa ser preenchido" maxlength="16" />
+						<p:outputLabel for="contato" value="Contato:" />
+						<p:inputText id="contato" value="#{entrada.contato}" required="true" requiredMessage="O campo precisa ser preenchido" maxlength="64" />
+						<p:outputLabel for="equipamento" value="Tipo de equipamento:" />
+						<p:selectOneMenu id="equipamento" value="#{entrada.tipoEquipamento}" converter="omnifaces.SelectItemsIndexConverter">
+							<f:selectItems var="t" value="#{entrada.tipoEquipamentos}" />
+						</p:selectOneMenu>
+						<p:outputLabel for="descricao" value="Descrição:" />
+						<p:inputText id="descricao" value="#{entrada.descricao}" required="true" requiredMessage="O campo precisa ser preenchido" maxlength="512" />
+					</p:panelGrid>
+				</p:panel>
+				<p:focus for="sau" />
+				<p:spacer />
+				<p:panel header="Assinatura eletônica">
+					<p:panelGrid columns="4" columnClasses="ui-g-1,ui-g-5,ui-g-1,ui-g-5" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="username" value="CPF:" />
+						<p:inputMask id="username" placeholder="Digite seu CPF" value="#{entrada.username}" required="true" requiredMessage="O CPF é obrigatório" mask="99999999999" />
+						<p:outputLabel for="password" value="Senha:" />
+						<p:password id="password" placeholder="Digite sua senha" value="#{entrada.password}" required="true" requiredMessage="A senha é obrigatória" />
+					</p:panelGrid>
+				</p:panel>
+				<p:spacer />
+				<p:commandButton value="Registrar entrada" action="#{entrada.registrarEntrada}" update="controle" styleClass="btn-primary" />
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

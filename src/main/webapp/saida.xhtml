@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:adm="http://github.com/adminfaces"
+				xmlns:c="http://java.sun.com/jsp/jstl/core"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+				template="/WEB-INF/template/template.xhtml">
+
+	<ui:define name="title">Controle de saída</ui:define>
+	<ui:define name="description">Controle de saída de equipamentos</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Saída" />
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{saida.grantAccess}" />
+		</f:metadata>
+		<h:form id="saidas" rendered="#{sessao.usuario.hasPerfil('SCM SCA')}">
+			<p:dataTable var="controle" value="#{saida.abertas}" emptyMessage="Nenhuma entrada cadastrada." paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="Filtrados: {totalRecords} | Página {currentPage} de {totalPages}" rowsPerPageTemplate="10,50" resizableColumns="true">
+				<p:column headerText="DINF" width="6%" sortBy="#{controle.dinf}" filterBy="#{controle.dinf}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.dinf}" />
+				</p:column>
+				<p:column headerText="SAU" width="6%" sortBy="#{controle.sau}" filterBy="#{controle.sau}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.sau}" />
+				</p:column>
+				<p:column headerText="Usuário entrada" width="20%" sortBy="#{controle.usuarioEntrada}" filterBy="#{controle.usuarioEntrada}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.usuarioEntrada}" />
+				</p:column>
+				<p:column headerText="Administrador entrada" width="20%" sortBy="#{controle.administradorEntrada}" filterBy="#{controle.administradorEntrada}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.administradorEntrada}" />
+				</p:column>
+				<p:column headerText="Contato" sortBy="#{controle.contato}" filterBy="#{controle.contato}" filterMatchMode="contains" toggleable="false">
+					<h:outputText value="#{controle.contato}" />
+				</p:column>
+				<p:column headerText="Data entrada" width="10%" sortBy="#{controle.dataEntrada}">
+					<h:outputText value="#{controle.dataEntrada}"><f:convertDateTime pattern="dd/MM/yyyy 'às' HH:mm" /></h:outputText>
+				</p:column>
+				<p:column style="width: 120px; text-align: right;" toggleable="false">
+					<p:tooltip position="left" showEffect="fade" hideEffect="fade" />
+					<p:commandButton update="saidas" icon="fa fa-trash" title="Excluir" action="#{saida.excluir}" styleClass="btn-danger" rendered="#{sessao.usuario.hasPerfil('SCA')}">
+						<f:setPropertyActionListener value="#{controle}" target="#{saida.controle}" />
+					</p:commandButton>
+					<p:commandButton update="editar" icon="fa fa-edit" title="Editar" styleClass="btn-warning" rendered="#{sessao.usuario.hasPerfil('SCA')}" onsuccess="PF('editDialog').show();" onerror="alert('Algo ocorreu, tente novamente.');">
+						<f:setPropertyActionListener value="#{controle}" target="#{saida.controle}" />
+					</p:commandButton>
+					<p:commandButton update="descricaoControle" icon="fa fa-info" title="Ver descrição" styleClass="btn-info" onsuccess="PF('descricaoDialog').show();" onerror="alert('Algo ocorreu, tente novamente.');">
+						<f:setPropertyActionListener value="#{controle}" target="#{saida.controle}" />
+					</p:commandButton>
+					<p:commandButton update="saidas" icon="fa fa-arrow-right" title="Entregar" styleClass="btn-success" onsuccess="PF('devolverDialog').show();" onerror="alert('Algo ocorreu, tente novamente.');">
+						<f:setPropertyActionListener value="#{controle}" target="#{saida.controle}" />
+					</p:commandButton>
+				</p:column>
+				<f:facet name="footer">Total: #{fn:length(saida.abertas)}</f:facet>
+			</p:dataTable>
+		</h:form>
+		<p:dialog modal="true" widgetVar="descricaoDialog" showEffect="fade" hideEffect="fade" closeOnEscape="true" width="70%">
+			<f:facet name="header"><h:outputText value="Informações" /></f:facet>
+			<div class="ui-g">
+				<h:outputText id="descricaoControle" value="#{saida.controle.descricao}" />
+			</div>
+		</p:dialog>
+		<p:dialog header="Assinatura Eletrônica" modal="true" widgetVar="devolverDialog" showEffect="fade" hideEffect="fade" closeOnEscape="true" width="70%">
+			<h:form id="devolverForm">
+				<div class="ui-fluid">
+					<p:panelGrid columns="4" columnClasses="ui-g-1,ui-g-5,ui-g-1,ui-g-5" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="username" value="CPF:" />
+						<p:inputMask id="username" placeholder="Digite seu CPF" value="#{saida.cpf}" required="true" requiredMessage="O CPF é obrigatório" mask="99999999999" />
+						<p:outputLabel for="password" value="Senha:" />
+						<p:password id="password" placeholder="Digite sua senha" value="#{saida.senha}" required="true" requiredMessage="A senha é obrigatória" />
+					</p:panelGrid>
+					<p:spacer />
+					<p:commandButton value="Devolver" action="#{saida.devolver}" update="saidas,devolverForm" oncomplete="if(!args.validationFailed){PF('devolverDialog').hide();}" styleClass="btn-primary btn-block" />
+				</div>
+			</h:form>
+		</p:dialog>
+		<p:dialog header="Saída" style="width: 50%;" widgetVar="editDialog" modal="true" draggable="true" closable="true" resizable="false" showHeader="true" showEffect="fade" hideEffect="fade" closeOnEscape="true" dynamic="true" width="50%">
+			<h:form id="editar">
+				<div class="ui-fluid">
+					<p:panelGrid layout="grid" columns="2" columnClasses="ui-g-4,ui-g-8">
+						<h:outputText value="DINF:" />
+						<p:inputText value="#{saida.controle.dinf}" />
+						<h:outputText value="SAU:" />
+						<p:inputText value="#{saida.controle.sau}" />
+						<h:outputText value="Contato:" />
+						<p:inputText value="#{saida.controle.contato}" />
+						<h:outputText value="Descrição:" />
+						<p:inputText value="#{saida.controle.descricao}" />
+					</p:panelGrid>
+				</div>
+				<p:spacer />
+				<p:commandButton value="Salvar alterações" action="#{saida.editar}" update="saidas" oncomplete="if(!args.validationFailed){PF('editDialog').hide();}" styleClass="btn-primary btn-block" />
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

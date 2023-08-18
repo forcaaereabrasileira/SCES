@@ -1,0 +1,20 @@
+@charset "ISO-8859-1";
+
+/* Text alignment */
+.thm-text-center { text-align: center; }
+.thm-text-justify { text-align: justify; }
+
+/* Text Colors */
+.thm-text-white { color: #ffffff; }
+
+/* Theme */
+body { margin: 0; }
+.thm-footer { background-color: #007ad9; color: #ffffff; }
+.thm-h1 { font-size: 2em !important; }
+.thm-h2 { font-size: 1.5em !important; font-weight: bold; }
+.thm-h3 { font-size: 1em !important; }
+.no-datalist-radius .ui-datalist-header { border-radius: 0 !important; }
+
+/* Progress bar */
+.progress-bar { position: absolute; width: 96px; right: 16px; bottom: 16px; background-color: rgba(255, 255, 255, 0.8); border: 1px solid #c8c8c8; border-radius: 6px; display: none; }
+.progress-bar > img { width: 96px; }
